@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience Feedback</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg, #ffd194, #ffafbd);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+
+        .qr-container {
+            margin-bottom: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container {
+            background: rgb(255, 255, 255);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stars {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .star {
+            font-size: 25px;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .star.selected {
+            color: gold;
+        }
+
+        form input, form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        form textarea {
+            resize: none;
+            height: 80px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+        }
+
+        button#cancel-button {
+            background-color: #ddd;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- QR Code Section -->
+    <div class="qr-container">
+        <h3>Scan the QR Code to Access the Review Page</h3>
+        <div id="qrcode"></div>
+    </div>
+
+    <div class="form-container">
+        <h2>Tell us about your experience</h2>
+        <div class="stars">
+            <span data-rating="1" class="star">★</span>
+            <span data-rating="2" class="star">★</span>
+            <span data-rating="3" class="star">★</span>
+            <span data-rating="4" class="star">★</span>
+            <span data-rating="5" class="star">★</span>
+        </div>
+        <form id="feedback-form">
+            <input type="text" id="fullname" placeholder="Your Fullname *" required>
+            <textarea id="opinion" placeholder="Your opinion..."></textarea>
+            <div class="buttons">
+                <button type="submit">Submit</button>
+                <button type="button" id="cancel-button">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const stars = document.querySelectorAll(".star");
+            const form = document.getElementById("feedback-form");
+            let selectedRating = 0;
+
+            // Generate QR Code
+            const qrCodeUrl = window.location.href; // Change this to your hosted URL
+            new QRCode(document.getElementById("qrcode"), {
+                text: qrCodeUrl,
+                width: 150,
+                height: 150
+            });
+
+            // Highlight stars on click
+            stars.forEach(star => {
+                star.addEventListener("click", () => {
+                    selectedRating = parseInt(star.getAttribute("data-rating"));
+                    stars.forEach(s => s.classList.remove("selected"));
+                    for (let i = 0; i < selectedRating; i++) {
+                        stars[i].classList.add("selected");
+                    }
+                });
+            });
+
+            // Handle form submission
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                if (selectedRating >= 1 && selectedRating <= 3) {
+                    alert("Thank you for your review!");
+                } else if (selectedRating >= 4 && selectedRating <= 5) {
+                    window.location.href = "https://saralinfosoft.com/"; 
+                } else {
+                    alert("Please select a rating before submitting.");
+                }
+            });
+
+            // Cancel button
+            document.getElementById("cancel-button").addEventListener("click", () => {
+                form.reset();
+                selectedRating = 0;
+                stars.forEach(s => s.classList.remove("selected"));
+            });
+        });
+    </script>
+
+</body>
+</html>
